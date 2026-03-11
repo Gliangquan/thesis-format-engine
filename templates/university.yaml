@@ -56,3 +56,19 @@ regions:
       font_family: 宋体
       font_size_pt: 10.5
       alignment: CENTER
+  - logical_role: toc_entry
+    paragraph_style:
+      font_family: 宋体
+      font_size_pt: 12
+      alignment: LEFT
+  - logical_role: references_item
+    paragraph_style:
+      font_family: 宋体
+      font_size_pt: 10.5
+      alignment: LEFT
+  - logical_role: numbered_heading
+    paragraph_style:
+      font_family: 黑体
+      font_size_pt: 14
+      bold: true
+      alignment: LEFT

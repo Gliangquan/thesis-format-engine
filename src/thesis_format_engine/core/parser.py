@@ -1,3 +1,5 @@
+import re
+
 from docx import Document
 from docx.oxml.ns import qn
 
@@ -41,6 +43,14 @@ class DocxParser:
     def _infer_logical_role(self, style_name: str | None, text: str) -> str:
         normalized = (text or "").strip().lower()
         exact = (text or "").strip()
+
+        if self._is_toc_entry(exact):
+            return "toc_entry"
+        if self._is_reference_item(exact):
+            return "references_item"
+        if self._is_numbered_heading(exact):
+            return "numbered_heading"
+
         if style_name == "Heading 1":
             if exact == "摘要" or normalized == "abstract":
                 return "abstract_heading"
@@ -58,6 +68,15 @@ class DocxParser:
         if exact.startswith("表") and "：" in exact:
             return "table_caption"
         return "body"
+
+    def _is_toc_entry(self, text: str) -> bool:
+        return bool(re.match(r"^.+\.{2,}\s*\d+$", text))
+
+    def _is_reference_item(self, text: str) -> bool:
+        return bool(re.match(r"^(\[\d+\]|\d+[.、])\s*.+", text))
+
+    def _is_numbered_heading(self, text: str) -> bool:
+        return bool(re.match(r"^\d+(?:\.\d+)*\s+.+", text))
 
     def _extract_paragraph_style(self, paragraph) -> ParagraphStyleSnapshot:
         first_run = paragraph.runs[0] if paragraph.runs else None
