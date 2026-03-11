@@ -17,7 +17,7 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 - `.docx` only
 - structure extraction for paragraphs and tables
 - paragraph style comparison (font, size, bold, alignment, line spacing, first-line indent, spacing)
-- first-pass table border extraction and comparison (style / size)
+- table extraction and comparison for borders plus cell text style (font / size / alignment)
 - rule-driven inspection
 - JSON/Markdown report output
 - first-pass auto-fix for paragraph font/alignment and table borders

@@ -138,6 +138,12 @@ class PatchEngine:
             self._set_table_border(table, edge, expected[field])
             changes += 1
 
+        if "cell_paragraph_style" in expected:
+            for row in table.rows:
+                for cell in row.cells:
+                    for paragraph in cell.paragraphs:
+                        changes += self._patch_paragraph(paragraph, expected["cell_paragraph_style"])
+
         return changes
 
     def _set_table_border(self, table, edge: str, spec: dict) -> None:

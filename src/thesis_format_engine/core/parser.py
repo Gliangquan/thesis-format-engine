@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 
 from docx import Document
 from docx.oxml.ns import qn
@@ -112,7 +113,29 @@ class DocxParser:
             right_border=self._extract_border(tbl_pr, "right"),
             inside_h_border=self._extract_border(tbl_pr, "insideH"),
             inside_v_border=self._extract_border(tbl_pr, "insideV"),
+            cell_paragraph_style=self._extract_cell_paragraph_style(table),
         )
+
+    def _extract_cell_paragraph_style(self, table) -> ParagraphStyleSnapshot | None:
+        samples = []
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    if paragraph.text.strip():
+                        samples.append(self._extract_paragraph_style(paragraph).model_dump(exclude_none=True))
+
+        if not samples:
+            return None
+
+        merged = {}
+        keys = sorted({key for sample in samples for key in sample.keys()})
+        for key in keys:
+            values = [sample[key] for sample in samples if key in sample]
+            if not values:
+                continue
+            merged[key] = Counter(values).most_common(1)[0][0]
+
+        return ParagraphStyleSnapshot.model_validate(merged) if merged else None
 
     def _extract_table_width(self, tbl_pr) -> str | None:
         width = tbl_pr.find(qn("w:tblW")) if tbl_pr is not None else None

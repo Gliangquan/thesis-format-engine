@@ -29,3 +29,4 @@ class TableStyleSnapshot(BaseModel):
     right_border: BorderStyle | None = None
     inside_h_border: BorderStyle | None = None
     inside_v_border: BorderStyle | None = None
+    cell_paragraph_style: ParagraphStyleSnapshot | None = None

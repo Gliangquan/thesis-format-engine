@@ -62,6 +62,7 @@ Supported fields:
 - `right_border`
 - `inside_h_border`
 - `inside_v_border`
+- `cell_paragraph_style`
 
 Each border supports:
 - `style`

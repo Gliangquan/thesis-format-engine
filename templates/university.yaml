@@ -48,6 +48,10 @@ rules:
         inside_v_border:
           style: single
           size: 4
+        cell_paragraph_style:
+          font_family: 宋体
+          font_size_pt: 10.5
+          alignment: CENTER
 
   - id: heading-2
     name: 二级标题
