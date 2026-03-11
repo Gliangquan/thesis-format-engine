@@ -1,0 +1,18 @@
+metadata:
+  name: draft-merge-sample Draft Template
+  version: 0.2-draft
+  institution: null
+  description: Auto-generated merged rule draft from sample DOCX. Review before production
+    use.
+rules:
+- id: normal
+  name: Normal
+  match:
+    region: Normal
+  sample_count: 3
+  target:
+    paragraph_style:
+      alignment: JUSTIFY
+      first_line_indent_pt: 24.0
+      font_size_pt: 12.0
+      line_spacing: 1.5

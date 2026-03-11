@@ -1,4 +1,4 @@
-from collections import OrderedDict
+from collections import Counter, OrderedDict, defaultdict
 from pathlib import Path
 
 import yaml
@@ -8,8 +8,8 @@ from thesis_format_engine.models.node import DocumentNode
 
 class RuleDraftGenerator:
     def generate(self, docx_path: str, nodes: list[DocumentNode]) -> dict:
-        rules: list[dict] = []
-        seen: set[tuple[str, str]] = set()
+        grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
+        meta: dict[tuple[str, str], dict] = {}
 
         for node in nodes:
             if node.node_type == "paragraph" and node.paragraph_style:
@@ -17,41 +17,49 @@ class RuleDraftGenerator:
                 if not paragraph_style:
                     continue
                 key = self._paragraph_key(node)
-                if key in seen:
-                    continue
-                seen.add(key)
-                rules.append(
-                    {
-                        "id": self._rule_id(node),
-                        "name": self._rule_name(node),
-                        "match": self._match(node),
-                        "target": {"paragraph_style": paragraph_style},
-                    }
-                )
+                grouped[key].append(paragraph_style)
+                meta[key] = {
+                    "id": self._rule_id(node),
+                    "name": self._rule_name(node),
+                    "match": self._match(node),
+                    "target_key": "paragraph_style",
+                }
 
             if node.node_type == "table" and node.table_style:
                 table_style = self._clean(node.table_style.model_dump(exclude_none=True))
                 if not table_style:
                     continue
                 key = self._table_key(node)
-                if key in seen:
-                    continue
-                seen.add(key)
-                rules.append(
-                    {
-                        "id": self._rule_id(node),
-                        "name": self._rule_name(node),
-                        "match": self._match(node),
-                        "target": {"table_style": table_style},
-                    }
-                )
+                grouped[key].append(table_style)
+                meta[key] = {
+                    "id": self._rule_id(node),
+                    "name": self._rule_name(node),
+                    "match": self._match(node),
+                    "target_key": "table_style",
+                }
+
+        rules: list[dict] = []
+        for key, samples in grouped.items():
+            merged = self._merge_samples(samples)
+            if not merged:
+                continue
+            info = meta[key]
+            rules.append(
+                {
+                    "id": info["id"],
+                    "name": info["name"],
+                    "match": info["match"],
+                    "sample_count": len(samples),
+                    "target": {info["target_key"]: merged},
+                }
+            )
 
         return {
             "metadata": {
                 "name": f"{Path(docx_path).stem} Draft Template",
-                "version": "0.1-draft",
+                "version": "0.2-draft",
                 "institution": None,
-                "description": "Auto-generated rule draft from sample DOCX. Review before production use.",
+                "description": "Auto-generated merged rule draft from sample DOCX. Review before production use.",
             },
             "rules": rules,
         }
@@ -83,6 +91,41 @@ class RuleDraftGenerator:
         if node.logical_role and node.logical_role != "body":
             return {"logical_role": node.logical_role}
         return {"region": node.region}
+
+    def _merge_samples(self, samples: list[dict]) -> dict:
+        merged: OrderedDict[str, object] = OrderedDict()
+        keys = sorted({key for sample in samples for key in sample.keys()})
+
+        for key in keys:
+            values = [sample[key] for sample in samples if key in sample]
+            if not values:
+                continue
+
+            if all(isinstance(value, dict) for value in values):
+                nested = self._merge_samples(values)
+                if nested:
+                    merged[key] = nested
+                continue
+
+            most_common_value, count = Counter(self._stable_key(value) for value in values).most_common(1)[0]
+            if count >= max(2, len(values) // 2 + 1) or len(set(self._stable_key(value) for value in values)) == 1:
+                merged[key] = self._recover_value(most_common_value)
+
+        return dict(merged)
+
+    def _stable_key(self, value):
+        if isinstance(value, dict):
+            return tuple(sorted((k, self._stable_key(v)) for k, v in value.items()))
+        if isinstance(value, list):
+            return tuple(self._stable_key(v) for v in value)
+        return value
+
+    def _recover_value(self, value):
+        if isinstance(value, tuple) and value and all(isinstance(item, tuple) and len(item) == 2 for item in value):
+            return {k: self._recover_value(v) for k, v in value}
+        if isinstance(value, tuple):
+            return [self._recover_value(v) for v in value]
+        return value
 
     def _clean(self, payload: dict) -> dict:
         cleaned = OrderedDict()

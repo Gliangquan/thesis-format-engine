@@ -15,7 +15,10 @@ thesisfix draft-rules sample-template.docx --output draft-rules.yaml
 - parses document nodes
 - infers logical roles
 - groups similar nodes by `logical_role` or `region`
+- merges repeated samples by majority value
 - emits a draft rule file in the new schema
+
+Generated rules include `sample_count` so you can see how many blocks supported each draft rule.
 
 ## Important note
 
