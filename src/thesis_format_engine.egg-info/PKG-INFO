@@ -1,3 +1,16 @@
+Metadata-Version: 2.4
+Name: thesis-format-engine
+Version: 0.1.0
+Summary: Rule-driven thesis formatting inspection and repair engine for DOCX documents
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: lxml>=5.3.0
+Requires-Dist: pydantic>=2.10.0
+Requires-Dist: PyYAML>=6.0.2
+Requires-Dist: python-docx>=1.1.2
+Requires-Dist: typer>=0.15.1
+Requires-Dist: rich>=13.9.4
+
 # Thesis Format Engine
 
 A rule-driven engine for inspecting and repairing thesis formatting in `.docx` documents.
@@ -16,7 +29,6 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 
 - `.docx` only
 - structure extraction for paragraphs and tables
-- first-pass paragraph style comparison (font, size, bold, alignment)
 - rule-driven inspection
 - JSON/Markdown report output
 - no auto-fix yet in the first milestone

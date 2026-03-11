@@ -1,0 +1,2 @@
+[console_scripts]
+thesisfix = thesis_format_engine.cli.main:app
