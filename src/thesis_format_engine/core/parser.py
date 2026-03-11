@@ -12,27 +12,51 @@ class DocxParser:
 
         for index, paragraph in enumerate(document.paragraphs):
             style_name = paragraph.style.name if paragraph.style else None
+            text = paragraph.text.strip()
             nodes.append(
                 DocumentNode(
                     node_id=f"p-{index}",
                     node_type="paragraph",
                     region=style_name,
-                    text=paragraph.text,
+                    logical_role=self._infer_logical_role(style_name, text),
+                    text=text,
                     paragraph_style=self._extract_paragraph_style(paragraph),
                 )
             )
 
         for index, table in enumerate(document.tables):
+            style_name = table.style.name if table.style else "Table"
             nodes.append(
                 DocumentNode(
                     node_id=f"t-{index}",
                     node_type="table",
-                    region=table.style.name if table.style else "Table",
+                    region=style_name,
+                    logical_role="table",
                     table_style=self._extract_table_style(table),
                 )
             )
 
         return nodes
+
+    def _infer_logical_role(self, style_name: str | None, text: str) -> str:
+        normalized = (text or "").strip().lower()
+        if style_name == "Heading 1":
+            if "摘要" in text or normalized == "abstract":
+                return "abstract_heading"
+            if "参考文献" in text:
+                return "references_heading"
+            return "heading1"
+        if style_name == "Heading 2":
+            return "heading2"
+        if "摘要" in text and len(text) <= 20:
+            return "abstract_heading"
+        if "参考文献" in text and len(text) <= 20:
+            return "references_heading"
+        if text.startswith("图") and "：" in text:
+            return "figure_caption"
+        if text.startswith("表") and "：" in text:
+            return "table_caption"
+        return "body"
 
     def _extract_paragraph_style(self, paragraph) -> ParagraphStyleSnapshot:
         first_run = paragraph.runs[0] if paragraph.runs else None

@@ -7,6 +7,7 @@ class DocumentNode(BaseModel):
     node_id: str
     node_type: str
     region: str | None = None
+    logical_role: str | None = None
     text: str | None = None
     paragraph_style: ParagraphStyleSnapshot | None = None
     table_style: TableStyleSnapshot | None = None

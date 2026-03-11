@@ -13,7 +13,12 @@ app = typer.Typer(help="Inspect thesis DOCX formatting against structured rules.
 
 
 @app.command()
-def inspect(docx_path: str, rules_path: str, output: str = "report.json") -> None:
+def inspect(
+    docx_path: str,
+    rules_path: str,
+    output: str = "report.json",
+    markdown_output: str | None = "report.md",
+) -> None:
     parser = DocxParser()
     loader = RuleLoader()
     detector = DetectionEngine()
@@ -29,9 +34,14 @@ def inspect(docx_path: str, rules_path: str, output: str = "report.json") -> Non
         "node_count": len(nodes),
         "issue_count": len(issues),
         "issues": issues,
+        "nodes": [node.model_dump(exclude_none=True) for node in nodes],
     }
     writer.write_json(output, payload)
-    print(f"[green]Inspection complete[/green] → {output}")
+    if markdown_output:
+        writer.write_markdown(markdown_output, payload)
+        print(f"[green]Inspection complete[/green] → {output}, {markdown_output}")
+    else:
+        print(f"[green]Inspection complete[/green] → {output}")
 
 
 @app.command()

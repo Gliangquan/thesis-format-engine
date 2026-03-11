@@ -21,6 +21,8 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 - rule-driven inspection
 - JSON/Markdown report output
 - first-pass auto-fix for paragraph font/alignment and table borders
+- JSON + Markdown inspection reports
+- logical role inference prototype for headings/body/table blocks
 
 ## Planned modules
 

@@ -40,5 +40,54 @@
       "expected": 4,
       "message": "inside_v_border.size does not match rule"
     }
+  ],
+  "nodes": [
+    {
+      "node_id": "p-0",
+      "node_type": "paragraph",
+      "region": "Heading 1",
+      "logical_role": "heading1",
+      "text": "示例论文标题",
+      "paragraph_style": {
+        "font_size_pt": 14.0
+      }
+    },
+    {
+      "node_id": "p-1",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "body",
+      "text": "正文段落。",
+      "paragraph_style": {}
+    },
+    {
+      "node_id": "t-0",
+      "node_type": "table",
+      "region": "Normal Table",
+      "logical_role": "table",
+      "table_style": {
+        "width": "0:auto",
+        "top_border": {
+          "style": "single",
+          "size": 4,
+          "color": "000000"
+        },
+        "bottom_border": {
+          "style": "single",
+          "size": 8,
+          "color": "000000"
+        },
+        "inside_h_border": {
+          "style": "single",
+          "size": 2,
+          "color": "000000"
+        },
+        "inside_v_border": {
+          "style": "single",
+          "size": 2,
+          "color": "000000"
+        }
+      }
+    }
   ]
 }
