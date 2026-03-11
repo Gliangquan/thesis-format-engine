@@ -20,7 +20,7 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 - first-pass table border extraction and comparison (style / size)
 - rule-driven inspection
 - JSON/Markdown report output
-- no auto-fix yet in the first milestone
+- first-pass auto-fix for paragraph font/alignment and table borders
 
 ## Planned modules
 
@@ -35,7 +35,8 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 ## Example target workflow
 
 ```bash
-python -m thesis_format_engine.cli.main inspect paper.docx --rules templates/university.yaml
+thesisfix inspect paper.docx templates/university.yaml --output report.json
+thesisfix patch paper.docx templates/university.yaml --output paper.fixed.docx
 ```
 
 ## Roadmap
