@@ -1,0 +1,16 @@
+name: University Thesis Template
+version: "1.0"
+regions:
+  - region: Normal
+    paragraph_style:
+      font_family: 宋体
+      font_size_pt: 12
+      alignment: JUSTIFY
+      line_spacing: 1.5
+      first_line_indent_chars: 2
+  - region: Heading 1
+    paragraph_style:
+      font_family: 黑体
+      font_size_pt: 16
+      bold: true
+      alignment: LEFT
