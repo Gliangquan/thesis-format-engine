@@ -14,3 +14,17 @@ regions:
       font_size_pt: 16
       bold: true
       alignment: LEFT
+  - region: Normal Table
+    table_style:
+      top_border:
+        style: single
+        size: 8
+      bottom_border:
+        style: single
+        size: 8
+      inside_h_border:
+        style: single
+        size: 4
+      inside_v_border:
+        style: single
+        size: 4

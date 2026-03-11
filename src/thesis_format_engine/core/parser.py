@@ -1,7 +1,8 @@
 from docx import Document
+from docx.oxml.ns import qn
 
 from thesis_format_engine.models.node import DocumentNode
-from thesis_format_engine.models.style import ParagraphStyleSnapshot, TableStyleSnapshot
+from thesis_format_engine.models.style import BorderStyle, ParagraphStyleSnapshot, TableStyleSnapshot
 
 
 class DocxParser:
@@ -27,7 +28,7 @@ class DocxParser:
                     node_id=f"t-{index}",
                     node_type="table",
                     region=table.style.name if table.style else "Table",
-                    table_style=TableStyleSnapshot(),
+                    table_style=self._extract_table_style(table),
                 )
             )
 
@@ -53,4 +54,42 @@ class DocxParser:
             line_spacing=float(fmt.line_spacing) if fmt.line_spacing is not None else None,
             space_before_pt=fmt.space_before.pt if fmt.space_before is not None else None,
             space_after_pt=fmt.space_after.pt if fmt.space_after is not None else None,
+        )
+
+    def _extract_table_style(self, table) -> TableStyleSnapshot:
+        tbl_pr = table._tbl.tblPr
+        return TableStyleSnapshot(
+            alignment=table.alignment.name if table.alignment is not None else None,
+            width=self._extract_table_width(tbl_pr),
+            top_border=self._extract_border(tbl_pr, "top"),
+            bottom_border=self._extract_border(tbl_pr, "bottom"),
+            left_border=self._extract_border(tbl_pr, "left"),
+            right_border=self._extract_border(tbl_pr, "right"),
+            inside_h_border=self._extract_border(tbl_pr, "insideH"),
+            inside_v_border=self._extract_border(tbl_pr, "insideV"),
+        )
+
+    def _extract_table_width(self, tbl_pr) -> str | None:
+        width = tbl_pr.find(qn("w:tblW")) if tbl_pr is not None else None
+        if width is None:
+            return None
+        value = width.get(qn("w:w"))
+        width_type = width.get(qn("w:type"))
+        if value is None:
+            return None
+        return f"{value}:{width_type or 'unknown'}"
+
+    def _extract_border(self, tbl_pr, side: str) -> BorderStyle | None:
+        if tbl_pr is None:
+            return None
+        borders = tbl_pr.find(qn("w:tblBorders"))
+        if borders is None:
+            return None
+        node = borders.find(qn(f"w:{side}"))
+        if node is None:
+            return None
+        return BorderStyle(
+            style=node.get(qn("w:val")),
+            size=int(node.get(qn("w:sz"))) if node.get(qn("w:sz")) else None,
+            color=node.get(qn("w:color")),
         )
