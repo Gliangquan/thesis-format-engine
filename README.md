@@ -24,6 +24,7 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 - JSON + Markdown inspection reports
 - logical role inference prototype for abstract / references / captions / heading levels / TOC / numbered headings
 - rules can match by style region or inferred logical role
+- minimal web UI for upload + inspect + patch
 
 ## Rule schema
 
@@ -49,6 +50,7 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 thesisfix draft-rules sample-template.docx --output draft-rules.yaml
 thesisfix inspect paper.docx templates/university.yaml --output report.json
 thesisfix patch paper.docx templates/university.yaml --output paper.fixed.docx
+uvicorn thesis_format_engine.web.app:app --reload
 ```
 
 ## Roadmap

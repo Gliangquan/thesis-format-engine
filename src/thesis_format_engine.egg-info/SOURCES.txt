@@ -18,8 +18,11 @@ src/thesis_format_engine/models/node.py
 src/thesis_format_engine/models/rule.py
 src/thesis_format_engine/models/style.py
 src/thesis_format_engine/patcher/__init__.py
+src/thesis_format_engine/patcher/engine.py
 src/thesis_format_engine/report/__init__.py
 src/thesis_format_engine/report/writer.py
 src/thesis_format_engine/rules/__init__.py
+src/thesis_format_engine/rules/generator.py
 src/thesis_format_engine/rules/loader.py
+src/thesis_format_engine/web/app.py
 tests/test_detector.py

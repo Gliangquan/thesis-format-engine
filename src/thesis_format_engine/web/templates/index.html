@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thesis Format Engine</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:#0b1020; color:#e5e7eb; margin:0; }
+      .wrap { max-width: 980px; margin: 0 auto; padding: 32px 20px 56px; }
+      .card { background:#121933; border:1px solid #253056; border-radius:16px; padding:20px; margin-bottom:18px; }
+      h1,h2,h3 { margin:0 0 14px; }
+      p { color:#b8c0d9; }
+      .grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+      .btn { background:#6d7cff; color:white; border:none; padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:600; }
+      .btn.secondary { background:#14b8a6; }
+      input[type=file] { display:block; margin:8px 0 14px; color:#dbe3ff; }
+      .stat { display:inline-block; margin-right:16px; color:#c8d1f0; }
+      .issue { padding:12px; border-radius:12px; background:#0d1430; border:1px solid #2c3c73; margin-bottom:10px; }
+      .error { color:#fca5a5; }
+      .ok { color:#86efac; }
+      a { color:#93c5fd; }
+      @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <h1>Thesis Format Engine Web</h1>
+        <p>上传论文 <code>.docx</code> 和规则 <code>.yaml</code>，直接执行格式检测或自动修复。</p>
+      </div>
+
+      {% if error %}
+      <div class="card">
+        <h2 class="error">执行失败</h2>
+        <p>{{ error }}</p>
+      </div>
+      {% endif %}
+
+      <div class="grid">
+        <form class="card" action="/inspect" method="post" enctype="multipart/form-data">
+          <h2>检测 Inspect</h2>
+          <label>论文 DOCX</label>
+          <input type="file" name="docx_file" accept=".docx" required />
+          <label>规则 YAML</label>
+          <input type="file" name="rules_file" accept=".yaml,.yml" required />
+          <button class="btn" type="submit">开始检测</button>
+        </form>
+
+        <form class="card" action="/patch" method="post" enctype="multipart/form-data">
+          <h2>修复 Patch</h2>
+          <label>论文 DOCX</label>
+          <input type="file" name="docx_file" accept=".docx" required />
+          <label>规则 YAML</label>
+          <input type="file" name="rules_file" accept=".yaml,.yml" required />
+          <button class="btn secondary" type="submit">自动修复并导出</button>
+        </form>
+      </div>
+
+      {% if result %}
+      <div class="card">
+        <h2>结果</h2>
+        <div>
+          <span class="stat">模式：{{ result.mode }}</span>
+          <span class="stat">文档：{{ result.document }}</span>
+          <span class="stat">规则：{{ result.rules }}</span>
+          <span class="stat">节点数：{{ result.node_count }}</span>
+          <span class="stat">问题数：{{ result.issue_count }}</span>
+          {% if result.changes is defined %}<span class="stat">修改数：{{ result.changes }}</span>{% endif %}
+        </div>
+        {% if result.download_url %}
+          <p><a href="{{ result.download_url }}">下载修复后的 DOCX</a></p>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <h2>问题列表</h2>
+        {% if result.issues %}
+          {% for issue in result.issues %}
+            <div class="issue">
+              <h3>{{ issue.node_id }} · {{ issue.region or issue.logical_role }}</h3>
+              <p>字段：{{ issue.field or "n/a" }}</p>
+              <p>期望：{{ issue.expected or "n/a" }}</p>
+              <p>实际：{{ issue.actual or "n/a" }}</p>
+              <p>说明：{{ issue.message }}</p>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p class="ok">没有检测到问题，当前文件符合规则。</p>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>

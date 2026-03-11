@@ -4,12 +4,16 @@ Version: 0.1.0
 Summary: Rule-driven thesis formatting inspection and repair engine for DOCX documents
 Requires-Python: >=3.11
 Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.115.6
+Requires-Dist: jinja2>=3.1.5
 Requires-Dist: lxml>=5.3.0
 Requires-Dist: pydantic>=2.10.0
 Requires-Dist: PyYAML>=6.0.2
 Requires-Dist: python-docx>=1.1.2
+Requires-Dist: python-multipart>=0.0.20
 Requires-Dist: typer>=0.15.1
 Requires-Dist: rich>=13.9.4
+Requires-Dist: uvicorn>=0.34.0
 
 # Thesis Format Engine
 
@@ -29,9 +33,22 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 
 - `.docx` only
 - structure extraction for paragraphs and tables
+- paragraph style comparison (font, size, bold, alignment, line spacing, first-line indent, spacing)
+- table extraction and comparison for borders plus cell text style (font / size / alignment)
 - rule-driven inspection
 - JSON/Markdown report output
-- no auto-fix yet in the first milestone
+- first-pass auto-fix for paragraph font/alignment and table borders
+- JSON + Markdown inspection reports
+- logical role inference prototype for abstract / references / captions / heading levels / TOC / numbered headings
+- rules can match by style region or inferred logical role
+
+## Rule schema
+
+- current rule schema: `metadata + rules[] + match + target`
+- schema guide: `docs/rule-schema.md`
+- draft generator guide: `docs/template-draft-generator.md`
+- draft generator merges repeated samples and records `sample_count` + `examples` + confidence
+- backward compatible with legacy `name/version/regions` files
 
 ## Planned modules
 
@@ -46,7 +63,9 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 ## Example target workflow
 
 ```bash
-python -m thesis_format_engine.cli.main inspect paper.docx --rules templates/university.yaml
+thesisfix draft-rules sample-template.docx --output draft-rules.yaml
+thesisfix inspect paper.docx templates/university.yaml --output report.json
+thesisfix patch paper.docx templates/university.yaml --output paper.fixed.docx
 ```
 
 ## Roadmap
