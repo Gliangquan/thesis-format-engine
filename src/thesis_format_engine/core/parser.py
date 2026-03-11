@@ -96,6 +96,7 @@ class DocxParser:
             else (style_font.italic if style_font and style_font.italic is not None else None),
             alignment=paragraph.alignment.name if paragraph.alignment is not None else None,
             line_spacing=float(fmt.line_spacing) if fmt.line_spacing is not None else None,
+            first_line_indent_pt=fmt.first_line_indent.pt if fmt.first_line_indent is not None else None,
             space_before_pt=fmt.space_before.pt if fmt.space_before is not None else None,
             space_after_pt=fmt.space_after.pt if fmt.space_after is not None else None,
         )

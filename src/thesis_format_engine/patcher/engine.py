@@ -99,6 +99,26 @@ class PatchEngine:
                 paragraph.alignment = self._alignment(expected["alignment"])
                 changes += 1
 
+        fmt = paragraph.paragraph_format
+        if "line_spacing" in expected and fmt.line_spacing != expected["line_spacing"]:
+            fmt.line_spacing = float(expected["line_spacing"])
+            changes += 1
+        if "first_line_indent_pt" in expected:
+            current_indent = fmt.first_line_indent.pt if fmt.first_line_indent is not None else None
+            if current_indent != expected["first_line_indent_pt"]:
+                fmt.first_line_indent = self._pt(float(expected["first_line_indent_pt"]))
+                changes += 1
+        if "space_before_pt" in expected:
+            current_space_before = fmt.space_before.pt if fmt.space_before is not None else None
+            if current_space_before != expected["space_before_pt"]:
+                fmt.space_before = self._pt(float(expected["space_before_pt"]))
+                changes += 1
+        if "space_after_pt" in expected:
+            current_space_after = fmt.space_after.pt if fmt.space_after is not None else None
+            if current_space_after != expected["space_after_pt"]:
+                fmt.space_after = self._pt(float(expected["space_after_pt"]))
+                changes += 1
+
         return changes
 
     def _patch_table(self, table, expected: dict) -> int:

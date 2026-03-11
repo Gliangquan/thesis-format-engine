@@ -1,0 +1,75 @@
+{
+  "document": "paragraph-spacing-sample.docx",
+  "rules": "University Thesis Template",
+  "node_count": 1,
+  "issue_count": 5,
+  "issues": [
+    {
+      "node_id": "p-0",
+      "region": "Normal",
+      "logical_role": "body",
+      "severity": "error",
+      "field": "alignment",
+      "actual": "LEFT",
+      "expected": "JUSTIFY",
+      "message": "alignment does not match rule"
+    },
+    {
+      "node_id": "p-0",
+      "region": "Normal",
+      "logical_role": "body",
+      "severity": "error",
+      "field": "line_spacing",
+      "actual": 1.0,
+      "expected": 1.5,
+      "message": "line_spacing does not match rule"
+    },
+    {
+      "node_id": "p-0",
+      "region": "Normal",
+      "logical_role": "body",
+      "severity": "error",
+      "field": "first_line_indent_pt",
+      "actual": 0.0,
+      "expected": 24.0,
+      "message": "first_line_indent_pt does not match rule"
+    },
+    {
+      "node_id": "p-0",
+      "region": "Normal",
+      "logical_role": "body",
+      "severity": "error",
+      "field": "space_before_pt",
+      "actual": 6.0,
+      "expected": 0.0,
+      "message": "space_before_pt does not match rule"
+    },
+    {
+      "node_id": "p-0",
+      "region": "Normal",
+      "logical_role": "body",
+      "severity": "error",
+      "field": "space_after_pt",
+      "actual": 6.0,
+      "expected": 0.0,
+      "message": "space_after_pt does not match rule"
+    }
+  ],
+  "nodes": [
+    {
+      "node_id": "p-0",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "body",
+      "text": "这是正文段落，用于测试首行缩进、行距和段前段后。",
+      "paragraph_style": {
+        "font_size_pt": 12.0,
+        "alignment": "LEFT",
+        "line_spacing": 1.0,
+        "first_line_indent_pt": 0.0,
+        "space_before_pt": 6.0,
+        "space_after_pt": 6.0
+      }
+    }
+  ]
+}

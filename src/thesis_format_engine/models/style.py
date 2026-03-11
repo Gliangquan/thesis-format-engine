@@ -14,6 +14,7 @@ class ParagraphStyleSnapshot(BaseModel):
     italic: bool | None = None
     alignment: str | None = None
     line_spacing: float | None = None
+    first_line_indent_pt: float | None = None
     first_line_indent_chars: float | None = None
     space_before_pt: float | None = None
     space_after_pt: float | None = None

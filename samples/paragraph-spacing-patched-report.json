@@ -1,0 +1,25 @@
+{
+  "document": "paragraph-spacing-patched.docx",
+  "rules": "University Thesis Template",
+  "node_count": 1,
+  "issue_count": 0,
+  "issues": [],
+  "nodes": [
+    {
+      "node_id": "p-0",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "body",
+      "text": "这是正文段落，用于测试首行缩进、行距和段前段后。",
+      "paragraph_style": {
+        "font_family": "宋体",
+        "font_size_pt": 12.0,
+        "alignment": "JUSTIFY",
+        "line_spacing": 1.5,
+        "first_line_indent_pt": 24.0,
+        "space_before_pt": 0.0,
+        "space_after_pt": 0.0
+      }
+    }
+  ]
+}
