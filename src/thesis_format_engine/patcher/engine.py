@@ -80,9 +80,13 @@ class PatchEngine:
     def _patch_paragraph(self, paragraph, expected: dict) -> int:
         changes = 0
         for run in paragraph.runs:
-            if "font_family" in expected and run.font.name != expected["font_family"]:
-                run.font.name = expected["font_family"]
-                changes += 1
+            if "font_family" in expected:
+                before = self._current_font_names(run)
+                target_font = str(expected["font_family"])
+                self._set_run_font_family(run, target_font)
+                after = self._current_font_names(run)
+                if before != after:
+                    changes += 1
             if "font_size_pt" in expected:
                 target_size = float(expected["font_size_pt"])
                 current = run.font.size.pt if run.font.size else None
@@ -165,6 +169,26 @@ class PatchEngine:
             border.set(qn("w:sz"), str(spec["size"]))
         if "color" in spec:
             border.set(qn("w:color"), str(spec["color"]))
+
+    def _set_run_font_family(self, run, font_family: str) -> None:
+        run.font.name = font_family
+        r_pr = run._element.get_or_add_rPr()
+        r_fonts = r_pr.rFonts
+        if r_fonts is None:
+            r_fonts = OxmlElement("w:rFonts")
+            r_pr.append(r_fonts)
+        for key in ("ascii", "hAnsi", "eastAsia", "cs"):
+            r_fonts.set(qn(f"w:{key}"), font_family)
+
+    def _current_font_names(self, run) -> tuple[str | None, str | None, str | None, str | None]:
+        r_pr = run._element.rPr if run._element is not None else None
+        r_fonts = r_pr.rFonts if r_pr is not None else None
+        return (
+            run.font.name,
+            r_fonts.get(qn("w:ascii")) if r_fonts is not None else None,
+            r_fonts.get(qn("w:hAnsi")) if r_fonts is not None else None,
+            r_fonts.get(qn("w:eastAsia")) if r_fonts is not None else None,
+        )
 
     def _alignment(self, value: str):
         from docx.enum.text import WD_ALIGN_PARAGRAPH

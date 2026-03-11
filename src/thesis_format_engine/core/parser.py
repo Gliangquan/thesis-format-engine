@@ -85,8 +85,7 @@ class DocxParser:
         fmt = paragraph.paragraph_format
 
         return ParagraphStyleSnapshot(
-            font_family=(first_run.font.name if first_run and first_run.font.name else None)
-            or (style_font.name if style_font and style_font.name else None),
+            font_family=self._extract_font_family(first_run, style_font),
             font_size_pt=(first_run.font.size.pt if first_run and first_run.font.size else None)
             or (style_font.size.pt if style_font and style_font.size else None),
             bold=(first_run.font.bold if first_run and first_run.font.bold is not None else None)
@@ -136,6 +135,29 @@ class DocxParser:
             merged[key] = Counter(values).most_common(1)[0][0]
 
         return ParagraphStyleSnapshot.model_validate(merged) if merged else None
+
+    def _extract_font_family(self, first_run, style_font) -> str | None:
+        for candidate in (
+            self._read_run_font_name(first_run, "eastAsia"),
+            self._read_run_font_name(first_run, "ascii"),
+            self._read_run_font_name(first_run, "hAnsi"),
+            first_run.font.name if first_run and first_run.font.name else None,
+            style_font.name if style_font and style_font.name else None,
+        ):
+            if candidate:
+                return candidate
+        return None
+
+    def _read_run_font_name(self, run, key: str) -> str | None:
+        if run is None or run._element is None:
+            return None
+        r_pr = run._element.rPr
+        if r_pr is None:
+            return None
+        r_fonts = r_pr.rFonts
+        if r_fonts is None:
+            return None
+        return r_fonts.get(qn(f"w:{key}"))
 
     def _extract_table_width(self, tbl_pr) -> str | None:
         width = tbl_pr.find(qn("w:tblW")) if tbl_pr is not None else None
