@@ -1,0 +1,46 @@
+{
+  "document": "schema-patched.docx",
+  "rules": "University Thesis Template",
+  "node_count": 3,
+  "issue_count": 0,
+  "issues": [],
+  "nodes": [
+    {
+      "node_id": "p-0",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "toc_entry",
+      "text": "第一章 绪论...............1",
+      "paragraph_style": {
+        "font_family": "宋体",
+        "font_size_pt": 12.0,
+        "alignment": "LEFT"
+      }
+    },
+    {
+      "node_id": "p-1",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "numbered_heading",
+      "text": "1 研究背景",
+      "paragraph_style": {
+        "font_family": "黑体",
+        "font_size_pt": 14.0,
+        "bold": true,
+        "alignment": "LEFT"
+      }
+    },
+    {
+      "node_id": "p-2",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "references_item",
+      "text": "[1] 张三. 论文标题. 期刊, 2024.",
+      "paragraph_style": {
+        "font_family": "宋体",
+        "font_size_pt": 10.5,
+        "alignment": "LEFT"
+      }
+    }
+  ]
+}

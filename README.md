@@ -25,6 +25,12 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 - logical role inference prototype for abstract / references / captions / heading levels / TOC / numbered headings
 - rules can match by style region or inferred logical role
 
+## Rule schema
+
+- current rule schema: `metadata + rules[] + match + target`
+- schema guide: `docs/rule-schema.md`
+- backward compatible with legacy `name/version/regions` files
+
 ## Planned modules
 
 - `models/` — data models for nodes, styles, and rules

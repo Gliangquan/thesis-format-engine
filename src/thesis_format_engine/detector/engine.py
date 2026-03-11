@@ -1,5 +1,5 @@
 from thesis_format_engine.models.node import DocumentNode
-from thesis_format_engine.models.rule import RegionRule, RuleSet
+from thesis_format_engine.models.rule import RuleItem, RuleSet
 
 
 class DetectionEngine:
@@ -40,7 +40,7 @@ class DetectionEngine:
 
         return issues
 
-    def _match_rule(self, node: DocumentNode, rules: list[RegionRule]) -> RegionRule | None:
+    def _match_rule(self, node: DocumentNode, rules: list[RuleItem]) -> RuleItem | None:
         for rule in rules:
             if rule.logical_role and node.logical_role == rule.logical_role:
                 return rule

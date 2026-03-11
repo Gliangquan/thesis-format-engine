@@ -4,7 +4,7 @@ from docx import Document
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
-from thesis_format_engine.models.rule import RegionRule, RuleSet
+from thesis_format_engine.models.rule import RuleItem, RuleSet
 
 
 class PatchEngine:
@@ -30,7 +30,7 @@ class PatchEngine:
         document.save(output_path)
         return {"output": output_path, "changes": changes}
 
-    def _match_rule(self, region: str | None, logical_role: str | None, rules: list[RegionRule]) -> RegionRule | None:
+    def _match_rule(self, region: str | None, logical_role: str | None, rules: list[RuleItem]) -> RuleItem | None:
         for rule in rules:
             if rule.logical_role and rule.logical_role == logical_role:
                 return rule

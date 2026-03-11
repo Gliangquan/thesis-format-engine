@@ -1,76 +1,134 @@
-name: University Thesis Template
-version: "1.0"
-regions:
-  - region: Normal
-    paragraph_style:
-      font_family: 宋体
-      font_size_pt: 12
-      alignment: JUSTIFY
-      line_spacing: 1.5
-      first_line_indent_pt: 24
-      space_before_pt: 0
-      space_after_pt: 0
-  - region: Heading 1
-    paragraph_style:
-      font_family: 黑体
-      font_size_pt: 16
-      bold: true
-      alignment: LEFT
-  - region: Normal Table
-    table_style:
-      top_border:
-        style: single
-        size: 8
-      bottom_border:
-        style: single
-        size: 8
-      inside_h_border:
-        style: single
-        size: 4
-      inside_v_border:
-        style: single
-        size: 4
-  - logical_role: heading2
-    paragraph_style:
-      font_family: 黑体
-      font_size_pt: 14
-      bold: true
-      alignment: LEFT
-  - logical_role: abstract_heading
-    paragraph_style:
-      font_family: 黑体
-      font_size_pt: 16
-      bold: true
-      alignment: CENTER
-  - logical_role: references_heading
-    paragraph_style:
-      font_family: 黑体
-      font_size_pt: 16
-      bold: true
-      alignment: CENTER
-  - logical_role: table_caption
-    paragraph_style:
-      font_family: 宋体
-      font_size_pt: 10.5
-      alignment: CENTER
-  - logical_role: figure_caption
-    paragraph_style:
-      font_family: 宋体
-      font_size_pt: 10.5
-      alignment: CENTER
-  - logical_role: toc_entry
-    paragraph_style:
-      font_family: 宋体
-      font_size_pt: 12
-      alignment: LEFT
-  - logical_role: references_item
-    paragraph_style:
-      font_family: 宋体
-      font_size_pt: 10.5
-      alignment: LEFT
-  - logical_role: numbered_heading
-    paragraph_style:
-      font_family: 黑体
-      font_size_pt: 14
-      bold: true
-      alignment: LEFT
+metadata:
+  name: University Thesis Template
+  version: "2.0"
+  institution: Demo University
+  description: Baseline thesis formatting rules for paragraphs, headings, tables, captions, TOC, and references.
+
+rules:
+  - id: body-normal
+    name: 正文段落
+    match:
+      region: Normal
+    target:
+      paragraph_style:
+        font_family: 宋体
+        font_size_pt: 12
+        alignment: JUSTIFY
+        line_spacing: 1.5
+        first_line_indent_pt: 24
+        space_before_pt: 0
+        space_after_pt: 0
+
+  - id: heading-1
+    name: 一级标题
+    match:
+      region: Heading 1
+    target:
+      paragraph_style:
+        font_family: 黑体
+        font_size_pt: 16
+        bold: true
+        alignment: LEFT
+
+  - id: normal-table
+    name: 普通表格
+    match:
+      region: Normal Table
+    target:
+      table_style:
+        top_border:
+          style: single
+          size: 8
+        bottom_border:
+          style: single
+          size: 8
+        inside_h_border:
+          style: single
+          size: 4
+        inside_v_border:
+          style: single
+          size: 4
+
+  - id: heading-2
+    name: 二级标题
+    match:
+      logical_role: heading2
+    target:
+      paragraph_style:
+        font_family: 黑体
+        font_size_pt: 14
+        bold: true
+        alignment: LEFT
+
+  - id: abstract-heading
+    name: 摘要标题
+    match:
+      logical_role: abstract_heading
+    target:
+      paragraph_style:
+        font_family: 黑体
+        font_size_pt: 16
+        bold: true
+        alignment: CENTER
+
+  - id: references-heading
+    name: 参考文献标题
+    match:
+      logical_role: references_heading
+    target:
+      paragraph_style:
+        font_family: 黑体
+        font_size_pt: 16
+        bold: true
+        alignment: CENTER
+
+  - id: table-caption
+    name: 表题
+    match:
+      logical_role: table_caption
+    target:
+      paragraph_style:
+        font_family: 宋体
+        font_size_pt: 10.5
+        alignment: CENTER
+
+  - id: figure-caption
+    name: 图题
+    match:
+      logical_role: figure_caption
+    target:
+      paragraph_style:
+        font_family: 宋体
+        font_size_pt: 10.5
+        alignment: CENTER
+
+  - id: toc-entry
+    name: 目录项
+    match:
+      logical_role: toc_entry
+    target:
+      paragraph_style:
+        font_family: 宋体
+        font_size_pt: 12
+        alignment: LEFT
+
+  - id: references-item
+    name: 参考文献条目
+    match:
+      logical_role: references_item
+    target:
+      paragraph_style:
+        font_family: 宋体
+        font_size_pt: 10.5
+        alignment: LEFT
+
+  - id: numbered-heading
+    name: 编号标题
+    match:
+      logical_role: numbered_heading
+    target:
+      paragraph_style:
+        font_family: 黑体
+        font_size_pt: 14
+        bold: true
+        alignment: LEFT
