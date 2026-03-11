@@ -5,89 +5,252 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thesis Format Engine</title>
     <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:#0b1020; color:#e5e7eb; margin:0; }
-      .wrap { max-width: 980px; margin: 0 auto; padding: 32px 20px 56px; }
-      .card { background:#121933; border:1px solid #253056; border-radius:16px; padding:20px; margin-bottom:18px; }
-      h1,h2,h3 { margin:0 0 14px; }
-      p { color:#b8c0d9; }
-      .grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
-      .btn { background:#6d7cff; color:white; border:none; padding:10px 16px; border-radius:10px; cursor:pointer; font-weight:600; }
-      .btn.secondary { background:#14b8a6; }
-      input[type=file] { display:block; margin:8px 0 14px; color:#dbe3ff; }
-      .stat { display:inline-block; margin-right:16px; color:#c8d1f0; }
-      .issue { padding:12px; border-radius:12px; background:#0d1430; border:1px solid #2c3c73; margin-bottom:10px; }
-      .error { color:#fca5a5; }
-      .ok { color:#86efac; }
-      a { color:#93c5fd; }
-      @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+      :root {
+        --bg: #08101f;
+        --panel: rgba(15, 23, 42, 0.86);
+        --panel-2: rgba(17, 24, 39, 0.92);
+        --line: rgba(148, 163, 184, 0.16);
+        --text: #e5eefc;
+        --muted: #9fb0cf;
+        --primary: #7c8cff;
+        --primary-2: #5eead4;
+        --danger: #fca5a5;
+        --success: #86efac;
+        --warning: #fde68a;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(124, 140, 255, 0.16), transparent 34%),
+          radial-gradient(circle at top right, rgba(94, 234, 212, 0.12), transparent 28%),
+          var(--bg);
+        color: var(--text);
+      }
+      .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 56px; }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.25fr 0.75fr;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 22px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+      }
+      .hero h1 { font-size: 34px; margin: 0 0 12px; }
+      .hero p { margin: 0; color: var(--muted); line-height: 1.7; }
+      .badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+      .badge {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 8px 12px; border-radius: 999px;
+        background: rgba(124, 140, 255, 0.12); color: #dbe5ff;
+        border: 1px solid rgba(124, 140, 255, 0.24); font-size: 13px;
+      }
+      .muted { color: var(--muted); }
+      .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+      .stat {
+        padding: 16px; border-radius: 18px; background: var(--panel-2); border: 1px solid var(--line);
+      }
+      .stat strong { display: block; font-size: 24px; margin-bottom: 6px; }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+      .panel-title { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; }
+      h2, h3 { margin: 0; }
+      label { display:block; font-size:14px; margin-bottom:8px; color:#d8e3ff; }
+      input[type=file] {
+        width: 100%; display:block; margin: 0 0 16px; padding: 14px;
+        border-radius: 16px; border: 1px dashed rgba(148,163,184,0.28);
+        background: rgba(15, 23, 42, 0.6); color: var(--muted);
+      }
+      .btn-row { display:flex; gap:12px; }
+      .btn {
+        border: none; cursor: pointer; border-radius: 14px; padding: 12px 16px; font-weight: 700;
+        color: white; background: linear-gradient(135deg, var(--primary), #5f71ff);
+      }
+      .btn.secondary { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+      .tiny { font-size: 13px; color: var(--muted); }
+      .feature-list { display:grid; gap:12px; }
+      .feature {
+        padding:14px 16px; border-radius:16px; background: var(--panel-2); border: 1px solid var(--line);
+      }
+      .feature strong { display:block; margin-bottom:6px; }
+      .error-box {
+        border: 1px solid rgba(252, 165, 165, 0.28); background: rgba(127, 29, 29, 0.22); color: #fecaca;
+      }
+      .result-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin:16px 0; }
+      .result-item {
+        border: 1px solid var(--line); border-radius: 18px; background: var(--panel-2); padding: 16px;
+      }
+      .result-item span { display:block; color: var(--muted); font-size:13px; margin-bottom:6px; }
+      .result-item strong { font-size: 22px; }
+      .download {
+        display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#d8fffb;
+        border: 1px solid rgba(94,234,212,0.3); background: rgba(20,184,166,0.14);
+        padding: 10px 14px; border-radius: 12px; font-weight: 600;
+      }
+      .issues { display:grid; gap:12px; }
+      .issue {
+        padding:16px; border-radius:18px; background: rgba(9, 15, 31, 0.72); border: 1px solid var(--line);
+      }
+      .issue-top { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; margin-bottom:10px; }
+      .pill {
+        display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700;
+      }
+      .pill.error { background: rgba(239,68,68,0.14); color: #fecaca; }
+      .pill.success { background: rgba(34,197,94,0.14); color: #bbf7d0; }
+      .kv { display:grid; grid-template-columns: 92px 1fr; gap:8px; font-size:14px; color:#d6e0f7; }
+      code { background: rgba(148,163,184,0.12); padding: 2px 7px; border-radius: 8px; }
+      .empty {
+        padding: 18px; border-radius: 18px; background: rgba(20, 83, 45, 0.22); border: 1px solid rgba(134, 239, 172, 0.2);
+        color: #d1fae5;
+      }
+      @media (max-width: 960px) {
+        .hero, .grid, .result-grid { grid-template-columns: 1fr; }
+      }
     </style>
   </head>
   <body>
     <div class="wrap">
-      <div class="card">
-        <h1>Thesis Format Engine Web</h1>
-        <p>上传论文 <code>.docx</code> 和规则 <code>.yaml</code>，直接执行格式检测或自动修复。</p>
-      </div>
+      <section class="hero">
+        <div class="card">
+          <div class="badge-row">
+            <span class="badge">DOCX 格式检测</span>
+            <span class="badge">规则驱动修复</span>
+            <span class="badge">可解释结果</span>
+          </div>
+          <h1>Thesis Format Engine</h1>
+          <p>
+            一个面向论文场景的格式检查与修复工作台。上传论文和模板规则后，你可以直接在浏览器里完成
+            <strong>检测</strong>、<strong>修复</strong>、<strong>结果查看</strong> 与 <strong>修复文件下载</strong>。
+          </p>
+          <div class="stats">
+            <div class="stat"><strong>DOCX</strong><span class="muted">当前聚焦 Word 论文文件</span></div>
+            <div class="stat"><strong>YAML</strong><span class="muted">结构化模板规则输入</span></div>
+            <div class="stat"><strong>Inspect / Patch</strong><span class="muted">浏览器内直接执行</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="panel-title">
+            <h2>能力概览</h2>
+          </div>
+          <div class="feature-list">
+            <div class="feature"><strong>正文段落</strong><span class="tiny">字体、字号、对齐、行距、首行缩进、段前段后</span></div>
+            <div class="feature"><strong>结构区域</strong><span class="tiny">摘要、参考文献、目录项、编号标题、图表题注</span></div>
+            <div class="feature"><strong>表格能力</strong><span class="tiny">边框、线宽、单元格文字字号/对齐/字体</span></div>
+          </div>
+        </div>
+      </section>
 
       {% if error %}
-      <div class="card">
-        <h2 class="error">执行失败</h2>
+      <section class="card error-box">
+        <h2>执行失败</h2>
         <p>{{ error }}</p>
-      </div>
+      </section>
       {% endif %}
 
-      <div class="grid">
+      <section class="card">
+        <div class="panel-title">
+          <div>
+            <h2>快速测试样例</h2>
+            <div class="tiny">如果你手边还没有 docx 和 yaml，可以先下载这套演示文件直接测试。</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <a class="download" href="{{ demo_docx_url }}">下载示例论文 DOCX</a>
+          <a class="download" href="{{ demo_rules_url }}">下载示例规则 YAML</a>
+        </div>
+      </section>
+
+      <section class="grid">
         <form class="card" action="/inspect" method="post" enctype="multipart/form-data">
-          <h2>检测 Inspect</h2>
+          <div class="panel-title">
+            <div>
+              <h2>检测 Inspect</h2>
+              <div class="tiny">生成问题清单，不修改原文件</div>
+            </div>
+          </div>
           <label>论文 DOCX</label>
           <input type="file" name="docx_file" accept=".docx" required />
           <label>规则 YAML</label>
           <input type="file" name="rules_file" accept=".yaml,.yml" required />
-          <button class="btn" type="submit">开始检测</button>
+          <div class="btn-row">
+            <button class="btn" type="submit">开始检测</button>
+          </div>
         </form>
 
         <form class="card" action="/patch" method="post" enctype="multipart/form-data">
-          <h2>修复 Patch</h2>
+          <div class="panel-title">
+            <div>
+              <h2>修复 Patch</h2>
+              <div class="tiny">自动应用规则，并导出修复后的副本</div>
+            </div>
+          </div>
           <label>论文 DOCX</label>
           <input type="file" name="docx_file" accept=".docx" required />
           <label>规则 YAML</label>
           <input type="file" name="rules_file" accept=".yaml,.yml" required />
-          <button class="btn secondary" type="submit">自动修复并导出</button>
+          <div class="btn-row">
+            <button class="btn secondary" type="submit">修复并导出</button>
+          </div>
         </form>
-      </div>
+      </section>
 
       {% if result %}
-      <div class="card">
-        <h2>结果</h2>
-        <div>
-          <span class="stat">模式：{{ result.mode }}</span>
-          <span class="stat">文档：{{ result.document }}</span>
-          <span class="stat">规则：{{ result.rules }}</span>
-          <span class="stat">节点数：{{ result.node_count }}</span>
-          <span class="stat">问题数：{{ result.issue_count }}</span>
-          {% if result.changes is defined %}<span class="stat">修改数：{{ result.changes }}</span>{% endif %}
+      <section class="card">
+        <div class="panel-title">
+          <div>
+            <h2>执行结果</h2>
+            <div class="tiny">当前模式：{{ result.mode }} · 文档：{{ result.document }} · 规则：{{ result.rules }}</div>
+          </div>
+          {% if result.download_url %}
+            <a class="download" href="{{ result.download_url }}">下载修复后的 DOCX</a>
+          {% endif %}
         </div>
-        {% if result.download_url %}
-          <p><a href="{{ result.download_url }}">下载修复后的 DOCX</a></p>
-        {% endif %}
-      </div>
 
-      <div class="card">
-        <h2>问题列表</h2>
+        <div class="result-grid">
+          <div class="result-item"><span>节点总数</span><strong>{{ result.node_count }}</strong></div>
+          <div class="result-item"><span>问题总数</span><strong>{{ result.issue_count }}</strong></div>
+          <div class="result-item"><span>执行模式</span><strong>{{ result.mode }}</strong></div>
+          <div class="result-item"><span>修改次数</span><strong>{{ result.changes if result.changes is defined else 0 }}</strong></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="panel-title">
+          <h2>问题详情</h2>
+          {% if result.issues %}
+            <span class="pill error">{{ result.issue_count }} 个问题</span>
+          {% else %}
+            <span class="pill success">全部通过</span>
+          {% endif %}
+        </div>
+
         {% if result.issues %}
-          {% for issue in result.issues %}
-            <div class="issue">
-              <h3>{{ issue.node_id }} · {{ issue.region or issue.logical_role }}</h3>
-              <p>字段：{{ issue.field or "n/a" }}</p>
-              <p>期望：{{ issue.expected or "n/a" }}</p>
-              <p>实际：{{ issue.actual or "n/a" }}</p>
-              <p>说明：{{ issue.message }}</p>
-            </div>
-          {% endfor %}
+          <div class="issues">
+            {% for issue in result.issues %}
+              <div class="issue">
+                <div class="issue-top">
+                  <div>
+                    <h3>{{ issue.node_id }} · {{ issue.region or issue.logical_role }}</h3>
+                    <div class="tiny">{{ issue.message }}</div>
+                  </div>
+                  <span class="pill error">{{ issue.severity or 'error' }}</span>
+                </div>
+                <div class="kv"><strong>字段</strong><span><code>{{ issue.field or 'n/a' }}</code></span></div>
+                <div class="kv"><strong>期望</strong><span>{{ issue.expected or 'n/a' }}</span></div>
+                <div class="kv"><strong>实际</strong><span>{{ issue.actual or 'n/a' }}</span></div>
+              </div>
+            {% endfor %}
+          </div>
         {% else %}
-          <p class="ok">没有检测到问题，当前文件符合规则。</p>
+          <div class="empty">没有检测到问题，当前文件已经符合所选规则。</div>
         {% endif %}
-      </div>
+      </section>
       {% endif %}
     </div>
   </body>
