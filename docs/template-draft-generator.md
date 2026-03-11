@@ -22,6 +22,8 @@ Generated rules include:
 
 - `sample_count`: how many blocks supported the draft rule
 - `examples`: up to 3 sample texts for manual review
+- `confidence`: merged-field consistency score (0~1)
+- `stability`: `high` / `medium` / `low`
 
 ## Important note
 

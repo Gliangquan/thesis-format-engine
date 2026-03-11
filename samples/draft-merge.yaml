@@ -1,6 +1,6 @@
 metadata:
   name: draft-merge-sample Draft Template
-  version: 0.3-draft
+  version: 0.4-draft
   institution: null
   description: Auto-generated merged rule draft from sample DOCX. Review before production
     use.
@@ -14,6 +14,8 @@ rules:
   - 正文段落1
   - 正文段落2
   - 正文段落3
+  confidence: 0.92
+  stability: high
   target:
     paragraph_style:
       alignment: JUSTIFY

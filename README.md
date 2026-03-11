@@ -30,7 +30,7 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 - current rule schema: `metadata + rules[] + match + target`
 - schema guide: `docs/rule-schema.md`
 - draft generator guide: `docs/template-draft-generator.md`
-- draft generator merges repeated samples and records `sample_count` + `examples`
+- draft generator merges repeated samples and records `sample_count` + `examples` + confidence
 - backward compatible with legacy `name/version/regions` files
 
 ## Planned modules

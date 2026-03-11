@@ -54,6 +54,7 @@ class RuleDraftGenerator:
             if not merged:
                 continue
             info = meta[key]
+            confidence = self._compute_confidence(samples, merged)
             rules.append(
                 {
                     "id": info["id"],
@@ -61,6 +62,8 @@ class RuleDraftGenerator:
                     "match": info["match"],
                     "sample_count": len(samples),
                     "examples": info["examples"],
+                    "confidence": round(confidence, 2),
+                    "stability": self._stability_label(confidence, len(samples)),
                     "target": {info["target_key"]: merged},
                 }
             )
@@ -68,7 +71,7 @@ class RuleDraftGenerator:
         return {
             "metadata": {
                 "name": f"{Path(docx_path).stem} Draft Template",
-                "version": "0.3-draft",
+                "version": "0.4-draft",
                 "institution": None,
                 "description": "Auto-generated merged rule draft from sample DOCX. Review before production use.",
             },
@@ -123,6 +126,46 @@ class RuleDraftGenerator:
                 merged[key] = self._recover_value(most_common_value)
 
         return dict(merged)
+
+    def _compute_confidence(self, samples: list[dict], merged: dict) -> float:
+        merged_fields = self._flatten(merged)
+        if not merged_fields:
+            return 0.0
+
+        scores: list[float] = []
+        for field_path, merged_value in merged_fields.items():
+            matched = 0
+            observed = 0
+            for sample in samples:
+                sample_fields = self._flatten(sample)
+                if field_path not in sample_fields:
+                    continue
+                observed += 1
+                if sample_fields[field_path] == merged_value:
+                    matched += 1
+            if observed:
+                scores.append(matched / observed)
+
+        if not scores:
+            return 0.0
+        return sum(scores) / len(scores)
+
+    def _stability_label(self, confidence: float, sample_count: int) -> str:
+        if confidence >= 0.9 and sample_count >= 3:
+            return "high"
+        if confidence >= 0.7 and sample_count >= 2:
+            return "medium"
+        return "low"
+
+    def _flatten(self, payload: dict, prefix: str = "") -> dict[str, object]:
+        flattened: dict[str, object] = {}
+        for key, value in payload.items():
+            path = f"{prefix}.{key}" if prefix else key
+            if isinstance(value, dict):
+                flattened.update(self._flatten(value, path))
+            else:
+                flattened[path] = value
+        return flattened
 
     def _push_example(self, examples: list[str], text: str | None) -> None:
         if not text:
