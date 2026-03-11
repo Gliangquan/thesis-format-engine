@@ -18,12 +18,17 @@ class RuleDraftGenerator:
                     continue
                 key = self._paragraph_key(node)
                 grouped[key].append(paragraph_style)
-                meta[key] = {
-                    "id": self._rule_id(node),
-                    "name": self._rule_name(node),
-                    "match": self._match(node),
-                    "target_key": "paragraph_style",
-                }
+                meta.setdefault(
+                    key,
+                    {
+                        "id": self._rule_id(node),
+                        "name": self._rule_name(node),
+                        "match": self._match(node),
+                        "target_key": "paragraph_style",
+                        "examples": [],
+                    },
+                )
+                self._push_example(meta[key]["examples"], node.text)
 
             if node.node_type == "table" and node.table_style:
                 table_style = self._clean(node.table_style.model_dump(exclude_none=True))
@@ -31,12 +36,17 @@ class RuleDraftGenerator:
                     continue
                 key = self._table_key(node)
                 grouped[key].append(table_style)
-                meta[key] = {
-                    "id": self._rule_id(node),
-                    "name": self._rule_name(node),
-                    "match": self._match(node),
-                    "target_key": "table_style",
-                }
+                meta.setdefault(
+                    key,
+                    {
+                        "id": self._rule_id(node),
+                        "name": self._rule_name(node),
+                        "match": self._match(node),
+                        "target_key": "table_style",
+                        "examples": [],
+                    },
+                )
+                self._push_example(meta[key]["examples"], node.text or "[table]")
 
         rules: list[dict] = []
         for key, samples in grouped.items():
@@ -50,6 +60,7 @@ class RuleDraftGenerator:
                     "name": info["name"],
                     "match": info["match"],
                     "sample_count": len(samples),
+                    "examples": info["examples"],
                     "target": {info["target_key"]: merged},
                 }
             )
@@ -57,7 +68,7 @@ class RuleDraftGenerator:
         return {
             "metadata": {
                 "name": f"{Path(docx_path).stem} Draft Template",
-                "version": "0.2-draft",
+                "version": "0.3-draft",
                 "institution": None,
                 "description": "Auto-generated merged rule draft from sample DOCX. Review before production use.",
             },
@@ -112,6 +123,17 @@ class RuleDraftGenerator:
                 merged[key] = self._recover_value(most_common_value)
 
         return dict(merged)
+
+    def _push_example(self, examples: list[str], text: str | None) -> None:
+        if not text:
+            return
+        normalized = text.strip().replace("\n", " ")
+        if not normalized or normalized in examples:
+            return
+        if len(normalized) > 60:
+            normalized = normalized[:57] + "..."
+        if len(examples) < 3:
+            examples.append(normalized)
 
     def _stable_key(self, value):
         if isinstance(value, dict):

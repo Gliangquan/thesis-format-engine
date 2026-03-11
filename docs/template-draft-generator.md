@@ -18,7 +18,10 @@ thesisfix draft-rules sample-template.docx --output draft-rules.yaml
 - merges repeated samples by majority value
 - emits a draft rule file in the new schema
 
-Generated rules include `sample_count` so you can see how many blocks supported each draft rule.
+Generated rules include:
+
+- `sample_count`: how many blocks supported the draft rule
+- `examples`: up to 3 sample texts for manual review
 
 ## Important note
 

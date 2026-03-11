@@ -1,6 +1,6 @@
 metadata:
   name: draft-merge-sample Draft Template
-  version: 0.2-draft
+  version: 0.3-draft
   institution: null
   description: Auto-generated merged rule draft from sample DOCX. Review before production
     use.
@@ -10,6 +10,10 @@ rules:
   match:
     region: Normal
   sample_count: 3
+  examples:
+  - 正文段落1
+  - 正文段落2
+  - 正文段落3
   target:
     paragraph_style:
       alignment: JUSTIFY
