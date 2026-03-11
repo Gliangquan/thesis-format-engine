@@ -2,31 +2,61 @@ from docx import Document
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
-from thesis_format_engine.models.rule import RuleSet
+from thesis_format_engine.models.rule import RegionRule, RuleSet
 
 
 class PatchEngine:
     def apply(self, docx_path: str, rules: RuleSet, output_path: str) -> dict:
         document = Document(docx_path)
-        rule_map = {rule.region: rule for rule in rules.regions}
         changes = 0
 
         for paragraph in document.paragraphs:
             region = paragraph.style.name if paragraph.style else None
-            rule = rule_map.get(region)
+            logical_role = self._infer_logical_role(region, paragraph.text.strip())
+            rule = self._match_rule(region, logical_role, rules.regions)
             if not rule or not rule.paragraph_style:
                 continue
             changes += self._patch_paragraph(paragraph, rule.paragraph_style.model_dump(exclude_none=True))
 
         for table in document.tables:
             region = table.style.name if table.style else "Table"
-            rule = rule_map.get(region)
+            rule = self._match_rule(region, "table", rules.regions)
             if not rule or not rule.table_style:
                 continue
             changes += self._patch_table(table, rule.table_style.model_dump(exclude_none=True))
 
         document.save(output_path)
         return {"output": output_path, "changes": changes}
+
+    def _match_rule(self, region: str | None, logical_role: str | None, rules: list[RegionRule]) -> RegionRule | None:
+        for rule in rules:
+            if rule.logical_role and rule.logical_role == logical_role:
+                return rule
+        for rule in rules:
+            if rule.region and rule.region == region:
+                return rule
+        return None
+
+    def _infer_logical_role(self, style_name: str | None, text: str) -> str:
+        normalized = (text or "").strip().lower()
+        exact = (text or "").strip()
+        if style_name == "Heading 1":
+            if exact == "摘要" or normalized == "abstract":
+                return "abstract_heading"
+            if exact == "参考文献":
+                return "references_heading"
+            return "heading1"
+        if style_name == "Heading 2":
+            return "heading2"
+        if exact == "摘要" or normalized == "abstract":
+            return "abstract_heading"
+        if exact == "参考文献":
+            return "references_heading"
+        if exact.startswith("图") and "：" in exact:
+            return "figure_caption"
+        if exact.startswith("表") and "：" in exact:
+            return "table_caption"
+        return "body"
 
     def _patch_paragraph(self, paragraph, expected: dict) -> int:
         changes = 0

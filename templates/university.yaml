@@ -28,3 +28,31 @@ regions:
       inside_v_border:
         style: single
         size: 4
+  - logical_role: heading2
+    paragraph_style:
+      font_family: 黑体
+      font_size_pt: 14
+      bold: true
+      alignment: LEFT
+  - logical_role: abstract_heading
+    paragraph_style:
+      font_family: 黑体
+      font_size_pt: 16
+      bold: true
+      alignment: CENTER
+  - logical_role: references_heading
+    paragraph_style:
+      font_family: 黑体
+      font_size_pt: 16
+      bold: true
+      alignment: CENTER
+  - logical_role: table_caption
+    paragraph_style:
+      font_family: 宋体
+      font_size_pt: 10.5
+      alignment: CENTER
+  - logical_role: figure_caption
+    paragraph_style:
+      font_family: 宋体
+      font_size_pt: 10.5
+      alignment: CENTER

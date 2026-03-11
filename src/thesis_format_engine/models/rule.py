@@ -4,7 +4,8 @@ from thesis_format_engine.models.style import ParagraphStyleSnapshot, TableStyle
 
 
 class RegionRule(BaseModel):
-    region: str
+    region: str | None = None
+    logical_role: str | None = None
     paragraph_style: ParagraphStyleSnapshot | None = None
     table_style: TableStyleSnapshot | None = None
 

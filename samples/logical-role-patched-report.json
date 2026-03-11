@@ -1,0 +1,59 @@
+{
+  "document": "logical-role-patched.docx",
+  "rules": "University Thesis Template",
+  "node_count": 4,
+  "issue_count": 0,
+  "issues": [],
+  "nodes": [
+    {
+      "node_id": "p-0",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "abstract_heading",
+      "text": "摘要",
+      "paragraph_style": {
+        "font_family": "黑体",
+        "font_size_pt": 16.0,
+        "bold": true,
+        "alignment": "CENTER"
+      }
+    },
+    {
+      "node_id": "p-1",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "body",
+      "text": "这是中文摘要内容。",
+      "paragraph_style": {
+        "font_family": "宋体",
+        "font_size_pt": 12.0,
+        "alignment": "JUSTIFY"
+      }
+    },
+    {
+      "node_id": "p-2",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "table_caption",
+      "text": "表1：实验结果",
+      "paragraph_style": {
+        "font_family": "宋体",
+        "font_size_pt": 10.5,
+        "alignment": "CENTER"
+      }
+    },
+    {
+      "node_id": "p-3",
+      "node_type": "paragraph",
+      "region": "Normal",
+      "logical_role": "references_heading",
+      "text": "参考文献",
+      "paragraph_style": {
+        "font_family": "黑体",
+        "font_size_pt": 16.0,
+        "bold": true,
+        "alignment": "CENTER"
+      }
+    }
+  ]
+}

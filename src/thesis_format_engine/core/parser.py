@@ -40,21 +40,22 @@ class DocxParser:
 
     def _infer_logical_role(self, style_name: str | None, text: str) -> str:
         normalized = (text or "").strip().lower()
+        exact = (text or "").strip()
         if style_name == "Heading 1":
-            if "摘要" in text or normalized == "abstract":
+            if exact == "摘要" or normalized == "abstract":
                 return "abstract_heading"
-            if "参考文献" in text:
+            if exact == "参考文献":
                 return "references_heading"
             return "heading1"
         if style_name == "Heading 2":
             return "heading2"
-        if "摘要" in text and len(text) <= 20:
+        if exact == "摘要" or normalized == "abstract":
             return "abstract_heading"
-        if "参考文献" in text and len(text) <= 20:
+        if exact == "参考文献":
             return "references_heading"
-        if text.startswith("图") and "：" in text:
+        if exact.startswith("图") and "：" in exact:
             return "figure_caption"
-        if text.startswith("表") and "：" in text:
+        if exact.startswith("表") and "：" in exact:
             return "table_caption"
         return "body"
 
