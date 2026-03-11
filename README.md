@@ -29,6 +29,7 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 
 - current rule schema: `metadata + rules[] + match + target`
 - schema guide: `docs/rule-schema.md`
+- draft generator guide: `docs/template-draft-generator.md`
 - backward compatible with legacy `name/version/regions` files
 
 ## Planned modules
@@ -44,6 +45,7 @@ Turn thesis formatting from manual, error-prone checking into a structured pipel
 ## Example target workflow
 
 ```bash
+thesisfix draft-rules sample-template.docx --output draft-rules.yaml
 thesisfix inspect paper.docx templates/university.yaml --output report.json
 thesisfix patch paper.docx templates/university.yaml --output paper.fixed.docx
 ```

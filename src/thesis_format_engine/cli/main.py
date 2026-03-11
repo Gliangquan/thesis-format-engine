@@ -7,6 +7,7 @@ from thesis_format_engine.core.parser import DocxParser
 from thesis_format_engine.detector.engine import DetectionEngine
 from thesis_format_engine.patcher.engine import PatchEngine
 from thesis_format_engine.report.writer import ReportWriter
+from thesis_format_engine.rules.generator import RuleDraftGenerator
 from thesis_format_engine.rules.loader import RuleLoader
 
 app = typer.Typer(help="Inspect thesis DOCX formatting against structured rules.")
@@ -52,6 +53,17 @@ def patch(docx_path: str, rules_path: str, output: str = "patched.docx") -> None
     rules = loader.load(rules_path)
     result = engine.apply(docx_path, rules, output)
     print(f"[green]Patch complete[/green] → {result['output']} (changes={result['changes']})")
+
+
+@app.command("draft-rules")
+def draft_rules(docx_path: str, output: str = "draft-rules.yaml") -> None:
+    parser = DocxParser()
+    generator = RuleDraftGenerator()
+
+    nodes = parser.parse(docx_path)
+    payload = generator.generate(docx_path, nodes)
+    generator.write_yaml(output, payload)
+    print(f"[green]Draft rules generated[/green] → {output}")
 
 
 if __name__ == "__main__":

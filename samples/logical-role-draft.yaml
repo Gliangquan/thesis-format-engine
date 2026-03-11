@@ -1,0 +1,31 @@
+metadata:
+  name: logical-role-sample Draft Template
+  version: 0.1-draft
+  institution: null
+  description: Auto-generated rule draft from sample DOCX. Review before production
+    use.
+rules:
+- id: abstract_heading
+  name: abstract_heading
+  match:
+    logical_role: abstract_heading
+  target:
+    paragraph_style:
+      font_size_pt: 14.0
+      alignment: LEFT
+- id: table_caption
+  name: table_caption
+  match:
+    logical_role: table_caption
+  target:
+    paragraph_style:
+      font_size_pt: 12.0
+      alignment: LEFT
+- id: references_heading
+  name: references_heading
+  match:
+    logical_role: references_heading
+  target:
+    paragraph_style:
+      font_size_pt: 14.0
+      alignment: LEFT
